@@ -1,0 +1,52 @@
+[
+  {
+    "Q": "Qual é a capital do Brasil?",
+    "A": "Brasília",
+    "T": "Geografia"
+  },
+  {
+    "Q": "Quem escreveu Dom Casmurro?",
+    "A": "Machado de Assis",
+    "T": "Literatura"
+  },
+  {
+    "Q": "Qual é a fórmula da água?",
+    "A": "H₂O",
+    "T": "Química"
+  },
+  {
+    "Q": "Qual o principal alimento dos pandas?",
+    "A": "Bambu",
+    "T": "Biologia"
+  },
+  {
+    "Q": "Em que ano o homem pisou na Lua pela primeira vez?",
+    "A": "1969",
+    "T": "História"
+  },
+  {
+    "Q": "Qual é o planeta mais próximo do Sol?",
+    "A": "Mercúrio",
+    "T": "Astronomia"
+  },
+  {
+    "Q": "Quais são os três estados físicos da matéria mais comuns?",
+    "A": "Sólido, líquido e gasoso",
+    "T": "Física"
+  },
+  {
+    "Q": "O que significa a sigla HTML?",
+    "A": "HyperText Markup Language",
+    "T": "Tecnologia"
+  },
+  {
+    "Q": "Qual é o maior oceano do mundo?",
+    "A": "Oceano Pacífico",
+    "T": "Geografia"
+  },
+  {
+    "Q": "Quais são os quatro operadores matemáticos básicos?",
+    "A": "Adição, subtração, multiplicação e divisão",
+    "T": "Matemática"
+  }
+]

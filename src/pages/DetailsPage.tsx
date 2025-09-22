@@ -13,6 +13,9 @@ import {
 
 export default function DetailsPage() {
   const { widgetId } = useParams();
+  // Base correta para servir widgets sob subpath (GitHub Pages) sem hardcode de domínio
+  const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
+  const iframeWidgetPath = `${baseUrl}/widgets/flashcards`;
   
   // Informações específicas para cada widget
   const widgetDetails: Record<string, {
@@ -70,11 +73,11 @@ export default function DetailsPage() {
     "T": "Química"
   }
 ]`,
-      iframeCode: `<!-- Exemplo 1: Usando data_b64 (recomendado para cross-domain) -->
-<iframe src="\${window.location.origin}/widgets/flashcards?data_b64=W3siUSI6IlF1YWwg4oCpIGEgY2FwaXRhbCBkbyBCcmFzaWw%2FIiwiQSI6IkJyYXPDrWxpYSIsIlQiOiJHZW9ncmFmaWEifSx7IlEiOiJRdWVtIGVzY3JldmV1IERvbSBDYXNtdXJybz8iLCJBIjoiTWFjaGFkbyBkZSBBc3NpcyIsIlQiOiJMaXRlcmF0dXJhIn0seyJRIjoiUXVhbCDDqSBhIGbDs3JtdWxhIGRhIMOhZ3VhPyIsIkEiOiJI4oCCwrJPIiwiVCI6IlF1w61taWNhIn1d" width="100%" height="600" frameborder="0"></iframe>
+  iframeCode: `<!-- Exemplo 1: Usando data_b64 (recomendado para cross-domain) -->
+<iframe src="${iframeWidgetPath}?data_b64=W3siUSI6IlF1YWwg4oCpIGEgY2FwaXRhbCBkbyBCcmFzaWw%2FIiwiQSI6IkJyYXPDrWxpYSIsIlQiOiJHZW9ncmFmaWEifSx7IlEiOiJRdWVtIGVzY3JldmV1IERvbSBDYXNtdXJybz8iLCJBIjoiTWFjaGFkbyBkZSBBc3NpcyIsIlQiOiJMaXRlcmF0dXJhIn0seyJRIjoiUXVhbCDDqSBhIGbDs3JtdWxhIGRhIMOhZ3VhPyIsIkEiOiJI4oCCwrJPIiwiVCI6IlF1w61taWNhIn1d" width="100%" height="600" frameborder="0"></iframe>
 
 <!-- Exemplo 2: Usando data (pode quebrar cross-domain com acentos) -->
-<iframe src="\${window.location.origin}/widgets/flashcards?data=SEU_BASE64_AQUI" width="100%" height="600" frameborder="0"></iframe>`
+<iframe src="${iframeWidgetPath}?data=SEU_BASE64_AQUI" width="100%" height="600" frameborder="0"></iframe>`
     }
   };
 
@@ -204,10 +207,10 @@ export default function DetailsPage() {
                 Teste o widget com dados de exemplo diretamente abaixo:
               </p>
               <div className="border border-dashed rounded-lg p-6 bg-muted/5">
-                <iframe 
-                  src={`${window.location.origin}/widgets/flashcards?data_b64=W3siUSI6IlF1YWwg4oCpIGEgY2FwaXRhbCBkbyBCcmFzaWw%2FIiwiQSI6IkJyYXPDrWxpYSIsIlQiOiJHZW9ncmFmaWEifSx7IlEiOiJRdWVtIGVzY3JldmV1IERvbSBDYXNtdXJybz8iLCJBIjoiTWFjaGFkbyBkZSBBc3NpcyIsIlQiOiJMaXRlcmF0dXJhIn0seyJRIjoiUXVhbCDDqSBhIGbDs3JtdWxhIGRhIMOhZ3VhPyIsIkEiOiJI4oCCwrJPIiwiVCI6IlF1w61taWNhIn1d`}
-                  width="100%" 
-                  height="500" 
+                <iframe
+                  src={`${iframeWidgetPath}?data_b64=W3siUSI6IlF1YWwg4oCpIGEgY2FwaXRhbCBkbyBCcmFzaWw%2FIiwiQSI6IkJyYXPDrWxpYSIsIlQiOiJHZW9ncmFmaWEifSx7IlEiOiJRdWVtIGVzY3JldmV1IERvbSBDYXNtdXJybz8iLCJBIjoiTWFjaGFkbyBkZSBBc3NpcyIsIlQiOiJMaXRlcmF0dXJhIn0seyJRIjoiUXVhbCDDqSBhIGbDs3JtdWxhIGRhIMOhZ3VhPyIsIkEiOiJI4oCCwrJPIiwiVCI6IlF1w61taWNhIn1d`}
+                  width="100%"
+                  height="500"
                   frameBorder="0"
                   className="rounded-md w-full"
                   title="Exemplo de Flashcards"

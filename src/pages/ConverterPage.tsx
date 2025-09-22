@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Copy, FileText, Code, AlertCircle, CheckCircle } from 'lucide-react';
+import { Copy, AlertCircle, CheckCircle } from 'lucide-react';
 
 export default function ConverterPage() {
   const [jsonInput, setJsonInput] = useState('');

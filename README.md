@@ -256,6 +256,37 @@ Após alterações estruturais (rotas, base ou assets), force um hard refresh (`
 ---
 
 Se precisar publicar em um domínio customizado (CNAME), crie um arquivo `CNAME` dentro de `public/` com o domínio desejado e faça commit antes do deploy.
+
+### Fallback para rotas (SPA) no GitHub Pages
+
+O GitHub Pages não faz rewrite automático para `index.html` em rotas client-side (ex: `/details/flashcards`). Sem configuração extra, ao recarregar ou acessar diretamente uma rota profunda você recebe 404. Solução adotada:
+
+1. Workflow cria um `404.html` copiando o `index.html` após o build.
+2. O GitHub Pages serve `404.html` quando não encontra o arquivo físico — o React Router então monta a aplicação e resolve a rota correta.
+
+Você também pode gerar localmente com:
+```bash
+npm run build:pages
+```
+Isso executa o build normal e cria `dist/404.html`.
+
+#### Alternativa: usar HashRouter
+
+Caso não queira o fallback 404, troque `BrowserRouter` por `HashRouter`:
+```tsx
+import { HashRouter } from 'react-router-dom';
+// ...
+<HashRouter>
+  {/* rotas */}
+</HashRouter>
+```
+URLs ficarão como `#/details/flashcards` (menos elegante, mas sem necessidade de 404.html).
+
+#### Checklist se ainda ver 404
+- Confirmar que `404.html` está no output (abra `https://<usuario>.github.io/<repo>/404.html`).
+- Verificar se o cache do navegador não está servindo versão antiga (hard refresh).
+- Conferir se `base` em `vite.config.ts` bate com o nome exato do repositório (case sensitive).
+
   {
     files: ['**/*.{ts,tsx}'],
     extends: [

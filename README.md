@@ -210,6 +210,52 @@ Um exemplo prático de incorporação está disponível em `/public/embed-exampl
 ## Licença
 
 Este projeto está licenciado sob a licença MIT - veja o arquivo LICENSE para detalhes.
+
+## Deploy no GitHub Pages
+
+Esta aplicação utiliza Vite + React Router. Para funcionar em um subdiretório do GitHub Pages (`https://<usuario>.github.io/<repositorio>/`), foram feitas as seguintes configurações:
+
+1. `vite.config.ts` define `base` dinamicamente a partir da variável de ambiente `GITHUB_REPOSITORY` durante o build em CI.
+2. O `BrowserRouter` recebe `basename={import.meta.env.BASE_URL}` para que as rotas funcionem corretamente no subcaminho.
+3. Um workflow GitHub Actions (`.github/workflows/deploy.yml`) faz o build e publica em GitHub Pages.
+
+### Passos para ativar
+
+1. No GitHub, vá em: Settings > Pages e escolha: Source = "GitHub Actions" (se ainda não estiver selecionado).
+2. Garanta que o branch principal se chama `main` (ou ajuste o workflow se usar outro nome).
+3. Faça push das alterações para `main`.
+4. Aguarde o workflow finalizar. O link de produção aparecerá em: Actions > Deploy to GitHub Pages (summary) ou em Settings > Pages.
+
+### Ajustando manualmente o nome do repositório
+
+Se preferir definir manualmente, substitua no `vite.config.ts` a lógica automática por:
+```ts
+export default defineConfig({
+  base: '/nome-do-repo/',
+  // ...restante
+})
+```
+
+### Teste local simulando base
+
+Para testar localmente o comportamento da base (opcional):
+```bash
+vite preview --base /nome-do-repo/
+```
+
+### Limpeza de cache
+
+Após alterações estruturais (rotas, base ou assets), force um hard refresh (`Ctrl+Shift+R` / `Cmd+Shift+R`) ou limpe o cache do navegador para garantir que o novo `manifest.json` e os chunks sejam carregados.
+
+### Erros comuns
+
+- 404 ao recarregar rota interna: confirme que o `basename` está presente no `BrowserRouter` e que o `base` do Vite corresponde ao nome do repositório.
+- Assets quebrados (404): verifique se o caminho resultante começa com `/<repo>/assets/...` em produção.
+- Página branca: abra o console e verifique se os scripts estão tentando carregar de `/assets/...` em vez de `/<repo>/assets/...` (indica `base` faltando).
+
+---
+
+Se precisar publicar em um domínio customizado (CNAME), crie um arquivo `CNAME` dentro de `public/` com o domínio desejado e faça commit antes do deploy.
   {
     files: ['**/*.{ts,tsx}'],
     extends: [

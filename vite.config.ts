@@ -4,7 +4,12 @@ import react from "@vitejs/plugin-react"
 import { defineConfig } from "vite"
 
 // https://vite.dev/config/
+// Detect GitHub Pages environment: we expect repository in GITHUB_REPOSITORY (owner/repo)
+// For local dev base stays '/'
+const repoName = process.env.GITHUB_REPOSITORY?.split('/')[1]
 export default defineConfig({
+  // When deploying to GitHub Pages under https://<user>.github.io/<repo>/ we need this base
+  base: repoName ? `/${repoName}/` : '/',
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {

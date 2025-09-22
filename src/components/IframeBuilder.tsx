@@ -12,6 +12,7 @@ export function IframeBuilder({ widgetType }: IframeBuilderProps) {
   const [jsonData, setJsonData] = useState('');
   const [base64Data, setBase64Data] = useState('');
   const [iframeCode, setIframeCode] = useState('');
+  const [iframeCodeRelative, setIframeCodeRelative] = useState('');
   const [error, setError] = useState('');
 
   // Exemplo padrão baseado no tipo de widget
@@ -57,19 +58,34 @@ export function IframeBuilder({ widgetType }: IframeBuilderProps) {
       const base64 = btoa(binary);
       setBase64Data(base64);
       
-      // Gerar código do iframe
+      // Gerar código do iframe respeitando BASE_URL (ex: /Orbe/ no GitHub Pages)
       const origin = window.location.origin;
+      const base = import.meta.env.BASE_URL || '/';
+      // Remover barra final para controlar concatenação e evitar //
+      const normalizedBase = base.replace(/\/$/, ''); // '/Orbe' ou ''
+      const widgetPath = `${normalizedBase}/widgets/${widgetType}`; // '/Orbe/widgets/flashcards' ou '/widgets/flashcards'
       // Usando encodeURIComponent para garantir que caracteres especiais sejam tratados corretamente
       const encodedBase64 = encodeURIComponent(base64);
-      const iframe = `<iframe 
-  src="${origin}/widgets/${widgetType}?data_b64=${encodedBase64}"
+      const fullUrl = `${origin}${widgetPath}?data_b64=${encodedBase64}`;
+  const iframe = `<iframe 
+  src="${fullUrl}"
   width="100%" 
   height="600" 
   frameborder="0"
   title="${widgetType} widget"
+  loading="lazy"
 ></iframe>`;
       
       setIframeCode(iframe);
+  // Versão relativa (útil quando o host final já está no mesmo domínio/subpath)
+  setIframeCodeRelative(`<iframe 
+  src="${widgetPath}?data_b64=${encodedBase64}"
+  width="100%"
+  height="600"
+  frameborder="0"
+  title="${widgetType} widget"
+  loading="lazy"
+></iframe>`);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro ao processar JSON');
       setBase64Data('');
@@ -91,9 +107,13 @@ export function IframeBuilder({ widgetType }: IframeBuilderProps) {
     }
   };
 
-  const previewUrl = base64Data 
-    ? `${window.location.origin}/widgets/${widgetType}?data_b64=${encodeURIComponent(base64Data)}`
-    : '';
+  const previewUrl = base64Data ? (() => {
+    const origin = window.location.origin;
+    const base = import.meta.env.BASE_URL || '/';
+    const normalizedBase = base.replace(/\/$/, '');
+    const widgetPath = `${normalizedBase}/widgets/${widgetType}`;
+    return `${origin}${widgetPath}?data_b64=${encodeURIComponent(base64Data)}`;
+  })() : '';
 
   return (
     <div className="bg-gray-50 dark:bg-slate-700 rounded-lg p-6 space-y-6">
@@ -196,6 +216,28 @@ export function IframeBuilder({ widgetType }: IframeBuilderProps) {
                 readOnly
                 className="min-h-[120px] font-mono text-xs bg-white dark:bg-slate-800"
               />
+              {iframeCodeRelative && (
+                <div className="space-y-1">
+                  <div className="flex justify-between items-center mt-4">
+                    <label className="text-xs font-medium opacity-80">Variante relativa (mesmo site / mesmo subpath):</label>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => copyToClipboard(iframeCodeRelative)}
+                      className="text-[10px] h-6 px-2"
+                    >
+                      <Copy className="h-3 w-3 mr-1" />
+                      Copiar
+                    </Button>
+                  </div>
+                  <Textarea
+                    value={iframeCodeRelative}
+                    readOnly
+                    className="min-h-[100px] font-mono text-[11px] bg-white dark:bg-slate-800"
+                  />
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -219,7 +261,7 @@ export function IframeBuilder({ widgetType }: IframeBuilderProps) {
       )}
 
       <div className="text-sm text-gray-600 dark:text-gray-400">
-        <p>💡 <strong>Dica:</strong> Cole o código gerado diretamente no seu site ou LMS!</p>
+        <p>💡 <strong>Dica:</strong> O caminho já inclui o subdiretório configurado (BASE_URL). Se você mover o projeto para outro domínio ou mudar o nome do repositório no GitHub Pages, basta rebuildar que o código novo refletirá a mudança.</p>
       </div>
     </div>
   );
